@@ -4,3 +4,10 @@ Flask-JWT
 Flask-SQLAlchemy
 uwsgi
 psycopg2
+cryptography
+Jinja2
+jwt
+PyJWT
+SQLAlchemy
+Werkzeug
+
