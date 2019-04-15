@@ -6,7 +6,7 @@ uwsgi
 psycopg2
 cryptography
 Jinja2
-jwt
+jwt==0.6.1
 PyJWT
 SQLAlchemy
 Werkzeug
