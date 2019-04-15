@@ -5,9 +5,8 @@ Flask-SQLAlchemy
 uwsgi
 psycopg2
 cryptography
-Jinja2
-jwt==0.6.1
-PyJWT
+Jinja2yJWT
+jwt
 SQLAlchemy
 Werkzeug
 
