@@ -6,6 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
 import datetime
 from functools import wraps
+import os
 
 app = Flask(__name__)
 
@@ -13,8 +14,10 @@ app.config['DEBUG'] = True
 app.config['SECRET_KEY'] = "f3cfe9ed8fae309f02079dbf"
 # here we using Sqlite3 data base 
 
-app.config['SQLALCHEMY_DATABASE_URI'] = r'sqlite:///C:\Users\user\Desktop\api_example\Flask1\todo.db'
+#app.config['SQLALCHEMY_DATABASE_URI'] = r'sqlite:///C:\Users\user\Desktop\api_example\Flask1\todo.db'
 
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///data.db')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Token authentication functionalites
 def token_required(f):
@@ -99,6 +102,19 @@ def create_user(current_user):
 
     return jsonify({'message' : 'New user is created!'})
     
+@app.route('/admin', methods=['POST'])
+def create_admin():
+    
+    data = request.get_json()
+
+    hashed_password = generate_password_hash(data['password'], method='sha256')
+
+    new_user = User(public_id=str(uuid.uuid4()), name=data['name'], password=hashed_password, admin=False)
+    new_user.admin = True
+    db.session.add(new_user)
+    db.session.commit()
+
+    return jsonify({'message' : 'Admin user is created!'})
 
 @app.route('/user/<public_id>', methods=['PUT'])
 @token_required
@@ -143,6 +159,7 @@ def login():
         return make_response('Could not verify User', 401, {'WWW-Authenticate' : 'Basic realm="Login required!"'})
 
     user = User.query.filter_by(name=auth.username).first()
+    print(user,"-----------------------")
 
     if not user:
         return make_response('Could not verify User', 401, {'WWW-Authenticate' : 'Basic realm="Login required!"'})
