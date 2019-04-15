@@ -10,5 +10,4 @@ jwt
 PyJWT
 SQLAlchemy
 Werkzeug
-wraps
 
